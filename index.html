@@ -7,31 +7,136 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            background: linear-gradient(135deg, #091427 0%, #0d1a2d 100%);
             min-height: 100vh;
+            color: #e5f1ff;
+            font-family: Arial, sans-serif;
         }
+
+        .container {
+            padding-top: 40px;
+        }
+
         .card {
-            border: none;
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 1rem;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            background: rgba(13, 25, 42, 0.9);
         }
+
+        .form-card {
+            padding: 2rem;
+        }
+
+        .list-card {
+            padding: 1.5rem;
+        }
+
+        h2, h3 {
+            color: #ffffff;
+            font-weight: 700;
+        }
+
+        .form-label {
+            color: #dfeeff;
+            font-weight: 600;
+        }
+
+        .form-control {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.12);
+            color: #fff;
+        }
+
+        .form-control::placeholder {
+            color: rgba(255,255,255,0.5);
+        }
+
+        .form-control:focus {
+            background: rgba(255,255,255,0.06);
+            color: #fff;
+            border-color: #66d9ef;
+            box-shadow: 0 0 0 0.2rem rgba(102, 217, 239, 0.15);
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #00b894, #00cec9);
+            border: none;
+            font-weight: 600;
+        }
+
+        .btn-primary:hover {
+            background: linear-gradient(135deg, #00a883, #00bbba);
+        }
+
         #resultado {
             display: none;
+            margin-top: 1rem;
         }
+
         #preview {
             max-width: 100%;
             max-height: 200px;
             margin-top: 10px;
             border-radius: 8px;
             display: none;
+            border: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .list-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .btn-outline-light {
+            border-color: rgba(255,255,255,0.4);
+            color: #fff;
+        }
+
+        .gato-item {
+            border: 1px solid rgba(255,255,255,0.08);
+            background: rgba(255,255,255,0.02);
+            border-radius: 12px;
+            padding: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .gato-item img {
+            width: 100%;
+            max-height: 180px;
+            object-fit: cover;
+            border-radius: 10px;
+            border: 1px solid rgba(255,255,255,0.08);
+            margin-bottom: 0.75rem;
+        }
+
+        .gato-item h5 {
+            color: #fff;
+            margin-bottom: 0.5rem;
+            font-weight: 700;
+        }
+
+        .gato-item p {
+            color: rgba(255,255,255,0.8);
+            margin: 0.15rem 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            color: rgba(255,255,255,0.7);
+            padding: 1.5rem;
+            border: 1px dashed rgba(255,255,255,0.2);
+            border-radius: 12px;
         }
     </style>
 </head>
 <body>
-    <div class="container py-5">
-        <div class="row justify-content-center">
-            <div class="col-md-6">
-                <div class="card p-4">
+    <div class="container">
+        <div class="row g-4">
+            <div class="col-lg-5">
+                <div class="card form-card">
                     <h2 class="text-center mb-4">Registro de Gato</h2>
 
                     <form id="formGato">
@@ -69,81 +174,110 @@
                     <div id="resultado" class="alert mt-4" role="alert"></div>
                 </div>
             </div>
+
+            <div class="col-lg-7">
+                <div class="card list-card">
+                    <div class="list-header">
+                        <h3>Gatos Registrados</h3>
+                        <button id="btnActualizar" class="btn btn-outline-light btn-sm">Actualizar</button>
+                    </div>
+
+                    <div id="listaGatos"></div>
+                </div>
+            </div>
         </div>
     </div>
 
     <script>
         const BACKEND_URL = 'https://backend-gato-eliab-vista.onrender.com/gato';
 
-        document.getElementById("imagen").addEventListener("change", (e) => {
+        const resultadoDiv = document.getElementById('resultado');
+        const listaGatos = document.getElementById('listaGatos');
+
+        document.getElementById('imagen').addEventListener('change', (e) => {
             const file = e.target.files[0];
-            const preview = document.getElementById("preview");
+            const preview = document.getElementById('preview');
 
             if (file) {
                 preview.src = URL.createObjectURL(file);
-                preview.style.display = "block";
+                preview.style.display = 'block';
             } else {
-                preview.src = "";
-                preview.style.display = "none";
+                preview.src = '';
+                preview.style.display = 'none';
             }
         });
 
-        document.getElementById("formGato").addEventListener('submit', async (e) => {
+        document.getElementById('formGato').addEventListener('submit', async (e) => {
             e.preventDefault();
-
-            const resultadoDiv = document.getElementById("resultado");
-            resultadoDiv.style.display = "none";
+            resultadoDiv.style.display = 'none';
 
             const formData = new FormData();
-
-            formData.append("nombre", document.getElementById("nombre").value.trim());
-
-            formData.append("edad", document.getElementById("edad").value);
-
-            formData.append("peso", document.getElementById("peso").value);
-
-            formData.append("raza", document.getElementById("raza").value.trim());
+            formData.append('nombre', document.getElementById('nombre').value.trim());
+            formData.append('edad', document.getElementById('edad').value);
+            formData.append('peso', document.getElementById('peso').value);
+            formData.append('raza', document.getElementById('raza').value.trim());
 
             const imagenInput = document.getElementById('imagen');
-
             if (imagenInput.files.length > 0) {
                 formData.append('imagen', imagenInput.files[0]);
             }
 
             try {
                 const respuesta = await fetch(BACKEND_URL, {
-                    method: "POST",
+                    method: 'POST',
                     body: formData
                 });
 
                 const data = await respuesta.json();
 
                 if (respuesta.ok) {
-                    resultadoDiv.className = "alert alert-success mt-4";
-
-                    resultadoDiv.innerHTML = 
-                        data.mensaje + 
-                        (
-                            data.imagenUrl 
-                            ? `<br><img src="${data.imagenUrl}" style="max-width:100%;margin-top:10px;border-radius:8px;">`
-                            : ""
-                        );
+                    resultadoDiv.className = 'alert alert-success mt-4';
+                    resultadoDiv.innerHTML = data.mensaje + (data.imagenUrl ? `<br><img src="${data.imagenUrl}" style="max-width:100%;margin-top:10px;border-radius:8px;">` : '');
+                    document.getElementById('formGato').reset();
+                    document.getElementById('preview').style.display = 'none';
+                    await cargarGatos();
                 } else {
-                    resultadoDiv.className = "alert alert-danger mt-4";
-                    resultadoDiv.textContent = data.mensaje || "Error al registrar el gato";
+                    resultadoDiv.className = 'alert alert-danger mt-4';
+                    resultadoDiv.textContent = data.mensaje || 'Error al registrar el gato';
                 }
 
                 resultadoDiv.style.display = 'block';
-
             } catch (error) {
                 console.error(error);
-
-                resultadoDiv.className = "alert alert-danger mt-4";
-                resultadoDiv.textContent = "Error de conexión con el servidor.";
-
-                resultadoDiv.style.display = "block";
+                resultadoDiv.className = 'alert alert-danger mt-4';
+                resultadoDiv.textContent = 'Error de conexión con el servidor.';
+                resultadoDiv.style.display = 'block';
             }
         });
+
+        async function cargarGatos() {
+            try {
+                const respuesta = await fetch(BACKEND_URL);
+                const gatos = await respuesta.json();
+
+                if (!Array.isArray(gatos) || gatos.length === 0) {
+                    listaGatos.innerHTML = '<div class="empty-state">Aún no hay gatos registrados.</div>';
+                    return;
+                }
+
+                listaGatos.innerHTML = gatos.map(gato => `
+                    <div class="gato-item">
+                        <img src="${gato.imagenUrl || 'https://via.placeholder.com/400x250?text=Sin+imagen'}" alt="${gato.nombre}">
+                        <h5>${gato.nombre}</h5>
+                        <p><strong>Edad:</strong> ${gato.edad} años</p>
+                        <p><strong>Peso:</strong> ${gato.peso} kg</p>
+                        <p><strong>Raza:</strong> ${gato.raza}</p>
+                    </div>
+                `).join('');
+            } catch (error) {
+                console.error(error);
+                listaGatos.innerHTML = '<div class="empty-state">Error al cargar los gatos. Intenta de nuevo.</div>';
+            }
+        }
+
+        document.getElementById('btnActualizar').addEventListener('click', cargarGatos);
+
+        cargarGatos();
     </script>
 </body>
 </html>
