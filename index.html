@@ -7,80 +7,123 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
     <style>
         body {
-            background: linear-gradient(135deg, #091427 0%, #0d1a2d 100%);
+            background: linear-gradient(135deg, #071426 0%, #0e1d31 100%);
             min-height: 100vh;
-            color: #e5f1ff;
             font-family: Arial, sans-serif;
+            color: #dfefff;
+            margin: 0;
         }
 
         .container {
-            padding-top: 40px;
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
         }
 
         .card {
+            background: rgba(10, 18, 30, 0.95);
             border: 1px solid rgba(255,255,255,0.08);
-            border-radius: 1rem;
+            border-radius: 18px;
             box-shadow: 0 10px 30px rgba(0,0,0,0.25);
-            background: rgba(13, 25, 42, 0.9);
+        }
+
+        .content-wrapper {
+            max-width: 760px;
+            margin: 0 auto;
         }
 
         .form-card {
-            padding: 2rem;
+            padding: 1.8rem 1.8rem 1.2rem;
         }
 
-        .list-card {
-            padding: 1.5rem;
-        }
-
-        h2, h3 {
+        h2 {
             color: #ffffff;
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
             font-weight: 700;
+            text-align: center;
         }
 
         .form-label {
-            color: #dfeeff;
+            display: block;
+            margin-bottom: 0.4rem;
+            font-size: 0.95rem;
+            color: #dfefff;
             font-weight: 600;
+        }
+
+        .mb-3 {
+            margin-bottom: 1rem;
         }
 
         .form-control {
-            background: rgba(255,255,255,0.04);
-            border: 1px solid rgba(255,255,255,0.12);
-            color: #fff;
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            font-size: 1rem;
+            border-radius: 0.6rem;
+            border: 1px solid rgba(255,255,255,0.14);
+            background: rgba(255,255,255,0.03);
+            color: #ffffff;
+            box-sizing: border-box;
         }
 
         .form-control::placeholder {
-            color: rgba(255,255,255,0.5);
+            color: rgba(255,255,255,0.55);
         }
 
         .form-control:focus {
-            background: rgba(255,255,255,0.06);
-            color: #fff;
-            border-color: #66d9ef;
-            box-shadow: 0 0 0 0.2rem rgba(102, 217, 239, 0.15);
+            border-color: rgba(118, 200, 255, 0.7);
+            outline: none;
+            box-shadow: 0 0 0 0.2rem rgba(118, 200, 255, 0.12);
+        }
+
+        #preview {
+            display: none;
+            max-width: 100%;
+            max-height: 200px;
+            margin-top: 10px;
+            border-radius: 8px;
+            border: 1px solid rgba(255,255,255,0.08);
         }
 
         .btn-primary {
-            background: linear-gradient(135deg, #00b894, #00cec9);
+            background: linear-gradient(135deg, #00d19d 0%, #00bfe3 100%);
             border: none;
-            font-weight: 600;
+            border-radius: 0.6rem;
+            color: #fff;
+            padding: 0.8rem 1rem;
+            width: 100%;
+            font-weight: 700;
+            cursor: pointer;
+            transition: 0.2s ease;
         }
 
         .btn-primary:hover {
-            background: linear-gradient(135deg, #00a883, #00bbba);
+            filter: brightness(1.06);
         }
 
         #resultado {
             display: none;
             margin-top: 1rem;
+            padding: 0.8rem 1rem;
+            border-radius: 0.65rem;
         }
 
-        #preview {
-            max-width: 100%;
-            max-height: 200px;
-            margin-top: 10px;
-            border-radius: 8px;
-            display: none;
-            border: 1px solid rgba(255,255,255,0.15);
+        .alert-success {
+            background: rgba(25, 135, 84, 0.2);
+            border: 1px solid rgba(25, 135, 84, 0.4);
+            color: #d1f7e2;
+        }
+
+        .alert-danger {
+            background: rgba(220, 53, 69, 0.18);
+            border: 1px solid rgba(220, 53, 69, 0.35);
+            color: #ffdfe2;
+        }
+
+        .list-section {
+            margin-top: 2rem;
+            padding: 1.4rem 1.2rem 1rem;
         }
 
         .list-header {
@@ -90,14 +133,30 @@
             margin-bottom: 1rem;
         }
 
-        .btn-outline-light {
-            border-color: rgba(255,255,255,0.4);
-            color: #fff;
+        .list-header h3 {
+            margin: 0;
+            color: #ffffff;
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .btn-secondary {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.25);
+            border-radius: 0.5rem;
+            color: #e9f4ff;
+            font-size: 0.8rem;
+            padding: 0.42rem 0.9rem;
+            cursor: pointer;
+        }
+
+        #listaGatos {
+            display: block;
         }
 
         .gato-item {
-            border: 1px solid rgba(255,255,255,0.08);
             background: rgba(255,255,255,0.02);
+            border: 1px solid rgba(255,255,255,0.08);
             border-radius: 12px;
             padding: 1rem;
             margin-bottom: 1rem;
@@ -108,88 +167,84 @@
             max-height: 180px;
             object-fit: cover;
             border-radius: 10px;
+            margin-bottom: 0.8rem;
             border: 1px solid rgba(255,255,255,0.08);
-            margin-bottom: 0.75rem;
         }
 
         .gato-item h5 {
-            color: #fff;
-            margin-bottom: 0.5rem;
+            margin: 0 0 0.4rem;
+            color: #ffffff;
+            font-size: 1.1rem;
             font-weight: 700;
         }
 
         .gato-item p {
+            margin: 0.2rem 0;
             color: rgba(255,255,255,0.8);
-            margin: 0.15rem 0;
+            font-size: 0.95rem;
         }
 
         .empty-state {
             text-align: center;
             color: rgba(255,255,255,0.7);
-            padding: 1.5rem;
-            border: 1px dashed rgba(255,255,255,0.2);
-            border-radius: 12px;
+            padding: 1.2rem;
+            border: 1px dashed rgba(255,255,255,0.18);
+            border-radius: 10px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <div class="row g-4">
-            <div class="col-lg-5">
-                <div class="card form-card">
-                    <h2 class="text-center mb-4">Registro de Gato</h2>
+        <div class="content-wrapper">
+            <div class="card form-card">
+                <h2>Registro de Gato</h2>
 
-                    <form id="formGato">
-                        <div class="mb-3">
-                            <label class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre" required placeholder="Ej: Michi">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Edad (años)</label>
-                            <input type="number" class="form-control" id="edad" required min="0" step="0.1" placeholder="Ej: 2.5">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Peso (kg)</label>
-                            <input type="number" class="form-control" id="peso" required min="0" step="0.1" placeholder="Ej: 4.2">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Raza</label>
-                            <input type="text" class="form-control" id="raza" required placeholder="Ej: Siames">
-                        </div>
-
-                        <div class="mb-3">
-                            <label class="form-label">Imagen del gato</label>
-                            <input type="file" class="form-control" id="imagen" accept="image/*" required>
-                            <img id="preview" alt="Vista previa">
-                        </div>
-
-                        <button type="submit" class="btn btn-primary w-100">
-                            Registrar Gato
-                        </button>
-                    </form>
-
-                    <div id="resultado" class="alert mt-4" role="alert"></div>
-                </div>
-            </div>
-
-            <div class="col-lg-7">
-                <div class="card list-card">
-                    <div class="list-header">
-                        <h3>Gatos Registrados</h3>
-                        <button id="btnActualizar" class="btn btn-outline-light btn-sm">Actualizar</button>
+                <form id="formGato">
+                    <div class="mb-3">
+                        <label class="form-label" for="nombre">Nombre</label>
+                        <input type="text" class="form-control" id="nombre" required placeholder="Ej: Michi">
                     </div>
 
-                    <div id="listaGatos"></div>
+                    <div class="mb-3">
+                        <label class="form-label" for="edad">Edad (años)</label>
+                        <input type="number" class="form-control" id="edad" required min="0" step="0.1" placeholder="Ej: 2.5">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="peso">Peso (kg)</label>
+                        <input type="number" class="form-control" id="peso" required min="0" step="0.1" placeholder="Ej: 4.2">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="raza">Raza</label>
+                        <input type="text" class="form-control" id="raza" required placeholder="Ej: Siames">
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label" for="imagen">Imagen del gato</label>
+                        <input type="file" class="form-control" id="imagen" accept="image/*" required>
+                        <img id="preview" alt="Vista previa">
+                    </div>
+
+                    <button type="submit" class="btn-primary">Registrar Gato</button>
+                </form>
+
+                <div id="resultado" class="alert-success" role="alert"></div>
+            </div>
+
+            <div class="card list-section">
+                <div class="list-header">
+                    <h3>Gatos Registrados</h3>
+                    <button id="btnActualizar" class="btn-secondary" type="button">Actualizar</button>
                 </div>
+
+                <div id="listaGatos"></div>
             </div>
         </div>
     </div>
 
     <script>
-        const BACKEND_URL = 'https://backend-gato-eliab-vista.onrender.com/gatos';
+        const BACKEND_URL = 'https://backend-gato-eliab-vista.onrender.com/gato';
 
         const resultadoDiv = document.getElementById('resultado');
         const listaGatos = document.getElementById('listaGatos');
@@ -231,20 +286,20 @@
                 const data = await respuesta.json();
 
                 if (respuesta.ok) {
-                    resultadoDiv.className = 'alert alert-success mt-4';
+                    resultadoDiv.className = 'alert-success';
                     resultadoDiv.innerHTML = data.mensaje + (data.imagenUrl ? `<br><img src="${data.imagenUrl}" style="max-width:100%;margin-top:10px;border-radius:8px;">` : '');
                     document.getElementById('formGato').reset();
                     document.getElementById('preview').style.display = 'none';
                     await cargarGatos();
                 } else {
-                    resultadoDiv.className = 'alert alert-danger mt-4';
+                    resultadoDiv.className = 'alert-danger';
                     resultadoDiv.textContent = data.mensaje || 'Error al registrar el gato';
                 }
 
                 resultadoDiv.style.display = 'block';
             } catch (error) {
                 console.error(error);
-                resultadoDiv.className = 'alert alert-danger mt-4';
+                resultadoDiv.className = 'alert-danger';
                 resultadoDiv.textContent = 'Error de conexión con el servidor.';
                 resultadoDiv.style.display = 'block';
             }
@@ -276,8 +331,8 @@
         }
 
         document.getElementById('btnActualizar').addEventListener('click', cargarGatos);
-
         cargarGatos();
     </script>
 </body>
 </html>
+
